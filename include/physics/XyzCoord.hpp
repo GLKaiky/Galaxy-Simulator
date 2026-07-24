@@ -1,5 +1,5 @@
 /**
- * @file      XYZ_coord.hpp
+ * @file      XyzCoord.hpp
  * @author    Kaiky França dos Reis Silva
  * @brief     
  * @version   0.1

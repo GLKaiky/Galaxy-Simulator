@@ -11,7 +11,6 @@
 
 #include "CelestialBody.hpp"
 #include <vector>
-
 class Galaxy {
     private:
         std::vector<CelestialBody> clusterOfStars;
@@ -44,7 +43,6 @@ class Galaxy {
 
         void updateGalaxy(double dt) {
             
-
             for(auto& star: this->clusterOfStars) {
                 star.updateMovement(dt);
             }

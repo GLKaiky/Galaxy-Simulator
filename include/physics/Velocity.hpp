@@ -8,7 +8,7 @@
  */
 
 #pragma once
-#include "XYZ_coord.hpp"
+#include "XyzCoord.hpp"
 
 struct Velocity {
     double V_x;

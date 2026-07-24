@@ -13,9 +13,9 @@
 #include <random>
 #include <cmath>
 
-#include "XYZ_coord.hpp"
-#include "Force.hpp"
-#include "Velocity.hpp"
+#include "./physics/XyzCoord.hpp"
+#include "./physics/Force.hpp"
+#include "./physics/Velocity.hpp"
 
 #define MIN_MASS 1.0
 #define MAX_MASS 10.0
