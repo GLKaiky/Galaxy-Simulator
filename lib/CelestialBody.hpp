@@ -56,6 +56,13 @@ class CelestialBody {
             this->appliedForce.F_y = -this->body_coordinates.Y;
             
         }
+        
+        //Construtor cuja unica função vai ser criar uma estrela central ultra massiva (buraco negro)
+        CelestialBody(XYZ_coord body_coordinates, Velocity velocity, double mass) { 
+            this->body_coordinates = body_coordinates;
+            this->velocity = velocity;
+            this->mass = mass;
+        }
 
 
         CelestialBody(double maxThickness, double maxRadius) : body_coordinates(maxThickness, maxRadius){ //momento do big bang, nasce um universo
