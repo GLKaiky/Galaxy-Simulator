@@ -17,9 +17,6 @@
 #include "Force.hpp"
 #include "Velocity.hpp"
 
-inline std::random_device rd;
-inline std::mt19937 gen(rd());
-
 #define MIN_MASS 1.0
 #define MAX_MASS 10.0
 #define GALAXY_GRAVITATIONAL_FORCE 5.0 
@@ -52,6 +49,12 @@ class CelestialBody {
 
         Velocity getVelocity () {
             return velocity;
+        }
+
+        void setAppliedForcetoCenter() {
+            this->appliedForce.F_x = -this->body_coordinates.X;
+            this->appliedForce.F_y = -this->body_coordinates.Y;
+            
         }
 
 
