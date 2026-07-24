@@ -28,16 +28,34 @@ class CelestialBody {
     private:
         double mass;
         XYZ_coord body_coordinates;
-        Force forceOfBody;
+        Force appliedForce;
         Velocity velocity;
 
+        /* Para pequenas exponenciações "std::pow()" pode ser um pouco de mais...
+           então apenas uma função que multiplica um valor por ele mesmo está ótimo*/
         double exponentiationByTwo(double value) {
             return value * value;
         }
     public:
 
+        double getMass() {
+            return this->mass;
+        }
 
-        CelestialBody(double maxThickness, double maxRadius) : body_coordinates(maxThickness, maxRadius){
+        XYZ_coord getBody_coordinates() {
+            return this->body_coordinates;
+        }
+
+        Force getAppliedForce() {
+            return this->appliedForce;
+        }
+
+        Velocity getVelocity () {
+            return velocity;
+        }
+
+
+        CelestialBody(double maxThickness, double maxRadius) : body_coordinates(maxThickness, maxRadius){ //momento do big bang, nasce um universo
             std::uniform_real_distribution mass(MIN_MASS, MAX_MASS);
 
             //Definição aleatória de uma massa sorteada entre 1 e 10 para a estrela (Quanto maior a massa, maior a força de atração)
@@ -65,5 +83,17 @@ class CelestialBody {
             this->velocity.V_x = velBase * cos(velAngle);
             this->velocity.V_y = velBase * sin(velAngle);
             this->velocity.V_z = 0.0;
+        }
+
+        ~CelestialBody(){ }
+
+        void updateMovement(double dt) {
+            Velocity dV = this->appliedForce.calculateDeltaV(this->mass, dt); //Variação de velocidade calculada
+            this->velocity+=dV; //acrescenta o desvio de velocidade 
+
+            XYZ_coord newPosition = this->velocity * dt; //calcula a nova posição
+            this->body_coordinates+= newPosition; //acrescenta a nova posição aos eixos X, Y e Z
+
+            this->appliedForce.reset(); //reseta a força (são muitos corpos fazendo força sob muitos corpos ao mesmo tempo)
         }
 };

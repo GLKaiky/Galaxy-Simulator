@@ -28,7 +28,7 @@ struct Force
         this->F_z += force.F_z;
     }
 
-    Velocity calcularDeltaV(double mass, double dt) const {
+    Velocity calculateDeltaV(double mass, double dt) const {
         Velocity deltaV;
         deltaV.V_x = (this->F_x / mass) * dt;
         deltaV.V_y = (this->F_y / mass) * dt;
