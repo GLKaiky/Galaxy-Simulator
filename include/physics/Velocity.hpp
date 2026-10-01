@@ -21,8 +21,8 @@ struct Velocity {
         this->V_z = 0.0;
     }
 
-    XYZ_coord operator*(double dt) const{
-        XYZ_coord newPosition;
+    XyzCoord operator*(double dt) const{
+        XyzCoord newPosition;
         
         newPosition.X = V_x * dt;
         newPosition.Y = V_y * dt;

@@ -7,3 +7,26 @@
  * @copyright Copyright (c) 2026 Kaiky França dos Reis Silva
  */
 
+#pragma once
+#include "../physics/XyzCoord.hpp"
+
+struct BoundingBox
+{
+    XyzCoord center;
+    double radius;
+
+    BoundingBox() { }
+    
+    BoundingBox(XyzCoord center, double radius) {
+        this->center = center;
+        this->radius = radius;
+    }
+
+    bool contains(const XyzCoord& body_coordinates) const{    
+        return(body_coordinates.X >= (center.X - radius) && body_coordinates.X <= (center.X + radius) &&
+            body_coordinates.Y >= (center.Y - radius) && body_coordinates.Y <= (center.Y + radius) &&
+            body_coordinates.Z >= (center.Z - radius) && body_coordinates.Z <= (center.Z + radius)
+            ); 
+    }
+
+};

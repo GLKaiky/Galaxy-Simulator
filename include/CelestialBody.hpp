@@ -19,12 +19,12 @@
 
 #define MIN_MASS 1.0
 #define MAX_MASS 10.0
-#define GALAXY_GRAVITATIONAL_FORCE 5.0 
+#define GALAXY_GRAVITATIONAL_FORCE 100.0 
 
 class CelestialBody {
     private:
         double mass;
-        XYZ_coord body_coordinates;
+        XyzCoord body_coordinates;
         Force appliedForce;
         Velocity velocity;
 
@@ -35,11 +35,11 @@ class CelestialBody {
         }
     public:
 
-        double getMass() {
+        double getMass() const {
             return this->mass;
         }
 
-        XYZ_coord getBody_coordinates() {
+        XyzCoord getBody_coordinates() const {
             return this->body_coordinates;
         }
 
@@ -57,8 +57,10 @@ class CelestialBody {
             
         }
         
+        CelestialBody() { }
+        
         //Construtor cuja unica função vai ser criar uma estrela central ultra massiva (buraco negro)
-        CelestialBody(XYZ_coord body_coordinates, Velocity velocity, double mass) { 
+        CelestialBody(XyzCoord body_coordinates, Velocity velocity, double mass) { 
             this->body_coordinates = body_coordinates;
             this->velocity = velocity;
             this->mass = mass;
@@ -101,9 +103,40 @@ class CelestialBody {
             Velocity dV = this->appliedForce.calculateDeltaV(this->mass, dt); //Variação de velocidade calculada
             this->velocity+=dV; //acrescenta o desvio de velocidade 
 
-            XYZ_coord newPosition = this->velocity * dt; //calcula a nova posição
+            XyzCoord newPosition = this->velocity * dt; //calcula a nova posição
             this->body_coordinates+= newPosition; //acrescenta a nova posição aos eixos X, Y e Z
 
             this->appliedForce.reset(); //reseta a força (são muitos corpos fazendo força sob muitos corpos ao mesmo tempo)
+        }
+
+        void applyGravitationalForce(const CelestialBody& other, double G, double epsilon) {
+            // Evita calcular a força do corpo sobre ele mesmo (divisão por zero e desperdício)
+            if (this == &other) return;
+
+            // 1. Calcula o vetor distância (dx, dy, dz) apontando deste corpo para o "other"
+            double dx = other.body_coordinates.X - this->body_coordinates.X;
+            double dy = other.body_coordinates.Y - this->body_coordinates.Y;
+            double dz = other.body_coordinates.Z - this->body_coordinates.Z;
+
+            // 2. Calcula a distância ao quadrado, somando o epsilon² para evitar colapsos
+            double distSq = exponentiationByTwo(dx) + 
+                            exponentiationByTwo(dy) + 
+                            exponentiationByTwo(dz) + 
+                            exponentiationByTwo(epsilon);
+            
+            // 3. Extrai a raiz para obter a distância real
+            double dist = std::sqrt(distSq);
+
+            // 4. Calcula o multiplicador escalar: (G * m1 * m2) / d³
+            // Usamos (distSq * dist) que é matematicamente igual a dist³, mas mais rápido de processar
+            double forceScalar = (G * this->mass * other.mass) / (distSq * dist);
+
+            // 5. Cria a força direcional e adiciona ao acumulador do corpo atual
+            Force f;
+            f.F_x = forceScalar * dx;
+            f.F_y = forceScalar * dy;
+            f.F_z = forceScalar * dz;
+
+            this->appliedForce += f;
         }
 };

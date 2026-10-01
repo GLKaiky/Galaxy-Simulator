@@ -15,15 +15,15 @@
 inline std::random_device rd;
 inline std::mt19937 gen(rd());
 
-struct XYZ_coord
+struct XyzCoord
 {
     double X;
     double Y;
     double Z;
 
-    XYZ_coord() { }
+    XyzCoord() { }
     
-    XYZ_coord(double maxThickness, double maxRadius) {
+    XyzCoord(double maxThickness, double maxRadius) {
 
 
         /*Define o eixo Z onde, sorteado um numero aleatório, vai definir em que altura estará a estrela*/
@@ -48,9 +48,15 @@ struct XYZ_coord
 
     }
 
-    void operator+=(const XYZ_coord& newPosition) {
+    void operator+=(const XyzCoord& newPosition) {
         this->X += newPosition.X;
         this->Y += newPosition.Y;
         this->Z += newPosition.Z;
+    }
+
+    void init() {
+        this->X = 0.0;
+        this->Y = 0.0;
+        this->Z = 0.0;
     }
 };
