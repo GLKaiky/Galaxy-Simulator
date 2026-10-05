@@ -25,7 +25,6 @@
 * **Jesus Cristo:** À ele toda honra e glória por todos os séculos, dos séculos.
 
 
-```markdown
 # 🌌 Simulador de Galáxia 3D (N-Body / Barnes-Hut)
 
 Um simulador astrofísico de N-corpos de alta performance escrito em **C++17** e renderizado com **Raylib**. O projeto simula a gravidade interativa de dezenas de milhares de estrelas em tempo real, utilizando otimizações de estrutura de dados espaciais e processamento paralelo.
@@ -79,8 +78,6 @@ make run
 make clean
 
 ```
-
-
 
 ---
 
