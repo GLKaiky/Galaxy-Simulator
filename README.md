@@ -1,3 +1,48 @@
+---
+
+## 👨‍💻 Criador
+
+**Kaiky França dos Reis Silva**  
+*Desenvolvedor de Software | Estudante na PUC Minas*
+- 💼 **LinkedIn:** [https://www.linkedin.com/in/glkaiky](https://www.linkedin.com/in/glkaiky)
+- 🌐 **Site/Portfólio:** [https://kaikyfrs.com.br](https://kaikyfrs.com.br)
+- 🐙 **GitHub:** [https://github.com/GLKaiky](https://github.com/GLKaiky)
+
+---
+
+---
+
+## 🙏 Agradecimentos
+
+### Em memória
+De **José Soares dos Reis** meu avô que se foi em setembro de 2026, por todo apoio e motivação que ele pode me dar nos últimos anos, que sua lembrança fique eternizada aqui
+
+### Também lembrados
+[https://github.com/Giusfds](https://github.com/Giusfds) Pela indicação na EloGroup
+
+**Isaac Newton** pela equação da gravidade, e pelos livros que eu usei nesse projeto
+
+**Romário Faria** pela copa de 94
+
+**Gemini** pela RayLib porque eu não tenho saco de mexer com biblioteca gráfica (créditos a ele por essa parte)
+
+**Jesus Cristo** à ele toda honra e glória por todos os séculos, dos séculos.
+
+---
+
+
+## 🤝 CoCriadores (Contribuidores)
+
+Este projeto tem foco acadêmico e é feito para evoluir! Quer me ajudar a escrever o algoritmo em Compute Shaders na GPU? Achou um gargalo na Octree? Quer adicionar simulação térmica ou colisões reais de matéria? 
+
+Faça um *fork*, abra um *Pull Request* e o seu nome ficará eternizado no nosso universo:
+
+*Esta seção aguarda o primeiro explorador!*
+
+- 🚀 `[Seu Nome/GitHub Aqui]` - *[Sua contribuição (ex: Portou a física para GLSL, Otimizou a Arena)]*
+- 🌌 `[Seu Nome/GitHub Aqui]` - *[Sua contribuição]*
+
+
 ```markdown
 # 🌌 Simulador de Galáxia 3D (N-Body / Barnes-Hut)
 
