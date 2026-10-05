@@ -1,5 +1,3 @@
----
-
 ## 👨‍💻 Criador
 
 **Kaiky França dos Reis Silva**
@@ -25,8 +23,6 @@
 * **Romário Faria:** Pela copa de 94.
 * **Gemini:** Pela RayLib, porque eu não tenho saco de mexer com biblioteca gráfica (créditos a ele por essa parte).
 * **Jesus Cristo:** À ele toda honra e glória por todos os séculos, dos séculos.
-
----
 
 
 ```markdown
