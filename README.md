@@ -14,7 +14,7 @@
 
 ### Em memória
 
-> De **José Soares dos Reis** meu avô que se foi em setembro de 2026, por todo apoio e motivação que ele pode me dar nos últimos anos, que sua lembrança fique eternizada aqui.
+> De **José Soares dos Reis** meu avô que se foi em setembro de 2026, por todo apoio e motivação que ele pode me dar nos últimos anos, que sua lembrança fique eternizada aqui como o melhor cozinheiro que a Fiat teve, e o melhor avô que alguém pôde ter.
 
 ### 🌟 Também lembrados
 
