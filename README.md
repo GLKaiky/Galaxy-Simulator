@@ -19,6 +19,7 @@
 ### 🌟 Também lembrados
 
 * **[Giusfds](https://github.com/Giusfds):** Pela indicação na EloGroup.
+* **Suzane**: Por ter me aguentado explicando sobre galáxia e gravidade.
 * **Isaac Newton:** Pela equação da gravidade, e pelos livros que eu usei nesse projeto.
 * **Romário Faria:** Pela copa de 94.
 * **Gemini:** Pela RayLib, porque eu não tenho saco de mexer com biblioteca gráfica (créditos a ele por essa parte).
