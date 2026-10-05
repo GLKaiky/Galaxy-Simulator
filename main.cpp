@@ -6,7 +6,7 @@
 #include <string>
 
 int main() {
-    const int W =  1280;
+    const int W = 1280;
     const int H = 720;
     
     // Antialiasing e janela ajustada

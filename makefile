@@ -14,7 +14,7 @@ LDLIBS   := -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
 
 # make          -> Release (padrão)
 # make debug    -> Debug (com símbolos, sem otimização)
-CXXFLAGS += -O3 -march=native  -ffast-math -flto
+CXXFLAGS += -O3 -march=native  -ffast-math -flto=auto
 
 .PHONY: all debug run clean
 
