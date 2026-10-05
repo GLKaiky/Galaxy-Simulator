@@ -10,14 +10,14 @@
 #pragma once
 #include "../physics/XyzCoord.hpp"
 
-struct BoundingBox
+struct SimBox 
 {
     XyzCoord center;
     double radius;
 
-    BoundingBox() { }
+    SimBox() { }
     
-    BoundingBox(XyzCoord center, double radius) {
+    SimBox(XyzCoord center, double radius) {
         this->center = center;
         this->radius = radius;
     }
@@ -28,5 +28,4 @@ struct BoundingBox
             body_coordinates.Z >= (center.Z - radius) && body_coordinates.Z <= (center.Z + radius)
             ); 
     }
-
 };

@@ -1,10 +1,8 @@
 /**
  * @file      XyzCoord.hpp
  * @author    Kaiky França dos Reis Silva
- * @brief     
- * @version   0.1
- * @date      2026-07-15
- * @copyright Copyright (c) 2026 Kaiky França dos Reis Silva
+ * @brief     Coordenada 3D + gerador aleatório global
+ * @version   0.2
  */
 
 #pragma once
@@ -12,51 +10,25 @@
 #include <random>
 #include <cmath>
 
+inline constexpr double kPi = 3.14159265358979323846;
+
 inline std::random_device rd;
 inline std::mt19937 gen(rd());
 
 struct XyzCoord
 {
-    double X;
-    double Y;
-    double Z;
+    double X = 0.0;
+    double Y = 0.0;
+    double Z = 0.0;
 
-    XyzCoord() { }
-    
-    XyzCoord(double maxThickness, double maxRadius) {
+    XyzCoord() = default;
+    XyzCoord(double x, double y, double z) : X(x), Y(y), Z(z) {}
 
-
-        /*Define o eixo Z onde, sorteado um numero aleatório, vai definir em que altura estará a estrela*/
-        std::uniform_real_distribution<double> distThickness(-maxThickness, maxThickness);
-
-        /* Utilizando da curva de gauss para fazer uma distribuição mais homogênea 
-        das estrelas pela galáxia garantindo mais naturalidade, com um desvio padrão 
-        calculado do raio máximo do centro da galáxia até sua borda e divide por 3
-        */
-        std::normal_distribution<double> distRadius(0.0, maxRadius / 3.0);
-
-        /*Define um ângulo entre 0 e 2 multiplicando pelo valor de PI (3,14...) 
-        dando então aleatóriamente as coordenadas polares da estrela */
-        std::uniform_real_distribution<double> angle(0.0, 2.0 * M_PI);
-        
-        double alpha = angle(gen);
-        double r = distRadius(gen);
-
-        this->Z = distThickness(gen);
-        this->X = r * cos(alpha);
-        this->Y = r * sin(alpha);
-
+    void operator+=(const XyzCoord& o) {
+        X += o.X;
+        Y += o.Y;
+        Z += o.Z;
     }
 
-    void operator+=(const XyzCoord& newPosition) {
-        this->X += newPosition.X;
-        this->Y += newPosition.Y;
-        this->Z += newPosition.Z;
-    }
-
-    void init() {
-        this->X = 0.0;
-        this->Y = 0.0;
-        this->Z = 0.0;
-    }
+    void init() { X = Y = Z = 0.0; }
 };

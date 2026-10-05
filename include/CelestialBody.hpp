@@ -1,142 +1,75 @@
 /**
- * @file      CelestialBody.cpp
+ * @file      CelestialBody.hpp
  * @author    Kaiky França dos Reis Silva
- * @brief     
- * @version   0.1
- * @date      2026-07-15
- * @copyright Copyright (c) 2026 Kaiky França dos Reis Silva
+ * @brief     Corpo celeste (estrela / buraco negro)
+ * @version   0.2
  */
 
-
 #pragma once
-#include <vector>
-#include <random>
 #include <cmath>
 
 #include "./physics/XyzCoord.hpp"
 #include "./physics/Force.hpp"
 #include "./physics/Velocity.hpp"
 
-#define MIN_MASS 1.0
-#define MAX_MASS 10.0
-#define GALAXY_GRAVITATIONAL_FORCE 100.0 
-
 class CelestialBody {
     private:
-        double mass;
+        double mass = 1.0;
         XyzCoord body_coordinates;
         Force appliedForce;
         Velocity velocity;
 
-        /* Para pequenas exponenciações "std::pow()" pode ser um pouco de mais...
-           então apenas uma função que multiplica um valor por ele mesmo está ótimo*/
-        double exponentiationByTwo(double value) {
-            return value * value;
-        }
     public:
+        CelestialBody() = default;
 
-        double getMass() const {
-            return this->mass;
+        CelestialBody(const XyzCoord& coords, const Velocity& vel, double m)
+            : mass(m), body_coordinates(coords), velocity(vel) {}
+
+        double getMass() const { return mass; }
+        const XyzCoord& getBody_coordinates() const { return body_coordinates; }
+        const Force& getAppliedForce() const { return appliedForce; }
+        const Velocity& getVelocity() const { return velocity; }
+
+        void resetForce() { appliedForce.reset(); }
+
+        // Meio "chute" de velocidade (leapfrog): v += a * h
+        void kick(double h) {
+            velocity += appliedForce.calculateDeltaV(mass, h);
         }
 
-        XyzCoord getBody_coordinates() const {
-            return this->body_coordinates;
+        // Deriva: x += v * dt
+        void drift(double dt) {
+            body_coordinates += velocity * dt;
         }
 
-        Force getAppliedForce() {
-            return this->appliedForce;
-        }
+        // Força gravitacional (com softening) de uma massa pontual qualquer.
+        // Serve tanto para outro corpo quanto para o centro de massa de um nó da árvore.
+        void applyPointMassForce(const XyzCoord& p, double m, double G, double epsilon) {
+            const double dx = p.X - body_coordinates.X;
+            const double dy = p.Y - body_coordinates.Y;
+            const double dz = p.Z - body_coordinates.Z;
 
-        Velocity getVelocity () {
-            return velocity;
-        }
+            const double distSq = dx * dx + dy * dy + dz * dz + epsilon * epsilon;
+            const double dist = std::sqrt(distSq);
+            const double s = (G * mass * m) / (distSq * dist);
 
-        void setAppliedForcetoCenter() {
-            this->appliedForce.F_x = -this->body_coordinates.X;
-            this->appliedForce.F_y = -this->body_coordinates.Y;
-            
-        }
-        
-        CelestialBody() { }
-        
-        //Construtor cuja unica função vai ser criar uma estrela central ultra massiva (buraco negro)
-        CelestialBody(XyzCoord body_coordinates, Velocity velocity, double mass) { 
-            this->body_coordinates = body_coordinates;
-            this->velocity = velocity;
-            this->mass = mass;
-        }
-
-
-        CelestialBody(double maxThickness, double maxRadius) : body_coordinates(maxThickness, maxRadius){ //momento do big bang, nasce um universo
-            std::uniform_real_distribution mass(MIN_MASS, MAX_MASS);
-
-            //Definição aleatória de uma massa sorteada entre 1 e 10 para a estrela (Quanto maior a massa, maior a força de atração)
-            this->mass = mass(gen);
-            
-            //Fazendo a arco-tangente de X e Y, se descobre o ângulo posicionado da estrela no plano cartesiano
-            double alpha = std::atan2(this->body_coordinates.Y,this->body_coordinates.X);
-
-            //Somando o Ângulo encontrando, pelo ângulo de 90 graus (pi/2), para ter o movimento circular de uma órbita
-            double velAngle = alpha + (M_PI/2);
-
-            //Pelo teorema de pitágoras, vai descobrir a distância que aquela estrela está do centro da galáxia 
-            //h² = c1² + c2² (D = raiz de c1 + c2)
-            double distance = std::sqrt(exponentiationByTwo(this->body_coordinates.X) 
-                                        + exponentiationByTwo(this->body_coordinates.Y));
-
-
-            /* A linha imaginária que liga o planeta ao Sol "varre" áreas iguais em intervalos de tempo iguais. 
-               Isso significa que a velocidade do planeta varia ao longo da órbita: ele se move mais rápido quando 
-               está mais próximo do Sol (periélio) e mais devagar quando está mais distante (afélio) (Segunda Lei de Kepler). 
-               Então simplificando a fórmula do newton, para ter uma velocidade maior quando
-               próximo ao centro e uma menor quando longe do centro */
-            double velBase = GALAXY_GRAVITATIONAL_FORCE * (1.0/std::sqrt(distance));
-
-            this->velocity.V_x = velBase * cos(velAngle);
-            this->velocity.V_y = velBase * sin(velAngle);
-            this->velocity.V_z = 0.0;
-        }
-
-        ~CelestialBody(){ }
-
-        void updateMovement(double dt) {
-            Velocity dV = this->appliedForce.calculateDeltaV(this->mass, dt); //Variação de velocidade calculada
-            this->velocity+=dV; //acrescenta o desvio de velocidade 
-
-            XyzCoord newPosition = this->velocity * dt; //calcula a nova posição
-            this->body_coordinates+= newPosition; //acrescenta a nova posição aos eixos X, Y e Z
-
-            this->appliedForce.reset(); //reseta a força (são muitos corpos fazendo força sob muitos corpos ao mesmo tempo)
+            Force f;
+            f.F_x = s * dx;
+            f.F_y = s * dy;
+            f.F_z = s * dz;
+            appliedForce += f;
         }
 
         void applyGravitationalForce(const CelestialBody& other, double G, double epsilon) {
-            // Evita calcular a força do corpo sobre ele mesmo (divisão por zero e desperdício)
             if (this == &other) return;
-
-            // 1. Calcula o vetor distância (dx, dy, dz) apontando deste corpo para o "other"
-            double dx = other.body_coordinates.X - this->body_coordinates.X;
-            double dy = other.body_coordinates.Y - this->body_coordinates.Y;
-            double dz = other.body_coordinates.Z - this->body_coordinates.Z;
-
-            // 2. Calcula a distância ao quadrado, somando o epsilon² para evitar colapsos
-            double distSq = exponentiationByTwo(dx) + 
-                            exponentiationByTwo(dy) + 
-                            exponentiationByTwo(dz) + 
-                            exponentiationByTwo(epsilon);
-            
-            // 3. Extrai a raiz para obter a distância real
-            double dist = std::sqrt(distSq);
-
-            // 4. Calcula o multiplicador escalar: (G * m1 * m2) / d³
-            // Usamos (distSq * dist) que é matematicamente igual a dist³, mas mais rápido de processar
-            double forceScalar = (G * this->mass * other.mass) / (distSq * dist);
-
-            // 5. Cria a força direcional e adiciona ao acumulador do corpo atual
-            Force f;
-            f.F_x = forceScalar * dx;
-            f.F_y = forceScalar * dy;
-            f.F_z = forceScalar * dz;
-
-            this->appliedForce += f;
+            applyPointMassForce(other.body_coordinates, other.mass, G, epsilon);
         }
+
+        void addForce(double x, double y, double z) {
+            this->appliedForce.F_x = x;
+            this->appliedForce.F_y = y;
+            this->appliedForce.F_z = z;
+            
+        }
+
 };

@@ -8,38 +8,53 @@
   */
  
 #pragma once
-#include "BoundingBox.hpp"
+#include "SimBox.hpp"
 #include "../CelestialBody.hpp"
 #include <vector>
 
+
+class OctreeNode; 
+
+struct NodeArena {
+    std::vector<OctreeNode> pool;
+    size_t count = 0;
+
+    NodeArena(size_t capacity = 500000) {
+        pool.resize(capacity);
+    }
+
+    void reset() {
+        count = 0;
+    }
+
+    OctreeNode* allocate(double radius, XyzCoord center);
+};
+
 class OctreeNode {
     private:
-        BoundingBox boundingBox;
+        SimBox boundingBox;
         CelestialBody *celestialBody;
         OctreeNode* leaf[8];
         double totalMass;
         XyzCoord centerOfMass;
 
     public:
+        ~OctreeNode() { }
 
-        ~OctreeNode() {
-                for(int i = 0; i < 8; i++) {
-                    if (this->leaf[i] != nullptr) {
-                        delete this->leaf[i];
-                        this->leaf[i] = nullptr;
-                    }
-                }
-        }
+        // IMPORTANTE: O std::vector exige um construtor vazio para fazer o .resize() inicial
+        OctreeNode() { } 
 
         OctreeNode(double maxRadius, XyzCoord center) {
-            this->celestialBody = nullptr;
+            init(maxRadius, center);
+        }
 
+        void init(double newRadius, XyzCoord newCenter) {
+            this->celestialBody = nullptr;
             for(int i = 0; i<8; i++) {
                 this->leaf[i] = nullptr;
             }
-
-            this->boundingBox.center = center;
-            this->boundingBox.radius = maxRadius;
+            this->boundingBox.center = newCenter;
+            this->boundingBox.radius = newRadius;
             this->totalMass = 0.0;
             this->centerOfMass.init();
         }
@@ -59,72 +74,55 @@ class OctreeNode {
                 return octant;
         }
 
-        bool insert(CelestialBody* body) {
-                // Proteção: Se a estrela não está dentro do limite deste nó, ela não entra.
-                if (!this->boundingBox.contains(body->getBody_coordinates())) {
-                    return false;
-                }
+    bool insert(CelestialBody* body, NodeArena& arena) {
+            if (!this->boundingBox.contains(body->getBody_coordinates())) return false;
 
-                // ESTADO 1: O nó está completamente vazio.
-                if (this->leaf[0] == nullptr && this->celestialBody == nullptr) {
-                    this->celestialBody = body;
-                    this->totalMass = body->getMass();
-                    this->centerOfMass = body->getBody_coordinates();
-                    return true;
-                }
-
-                // ESTADO 2: O nó já tem uma estrela (Colisão). Precisa fatiar o espaço.
-                if (this->leaf[0] == nullptr && this->celestialBody != nullptr) {
-                    this->subdivide();
-                    
-                    // Pega a estrela antiga que estava aqui e empurra para a gaveta certa abaixo
-                    int oldOctant = this->getOctant(this->celestialBody->getBody_coordinates());
-                    this->leaf[oldOctant]->insert(this->celestialBody);
-                    
-                    // Este nó agora é um nó interno (representante). Limpamos a referência física.
-                    this->celestialBody = nullptr;
-                }
-
-                // ESTADO 3: O nó é interno (já tinha filhos ou acabou de ser subdividido).
-                // Atualiza a massa total e recalcula o centro de massa (média ponderada).
-                double newTotalMass = this->totalMass + body->getMass();
-                
-                double x_cm = (this->centerOfMass.X * this->totalMass + body->getBody_coordinates().X * body->getMass()) / newTotalMass;
-                double y_cm = (this->centerOfMass.Y * this->totalMass + body->getBody_coordinates().Y * body->getMass()) / newTotalMass;
-                double z_cm = (this->centerOfMass.Z * this->totalMass + body->getBody_coordinates().Z * body->getMass()) / newTotalMass;
-                
-                this->centerOfMass.X = x_cm;
-                this->centerOfMass.Y = y_cm;
-                this->centerOfMass.Z = z_cm;
-                
-                this->totalMass = newTotalMass;
-
-                // Por fim, empurra a nova estrela para o octante correto (recursão).
-                int newOctant = this->getOctant(body->getBody_coordinates());
-                return this->leaf[newOctant]->insert(body);
+            if (this->leaf[0] == nullptr && this->celestialBody == nullptr) {
+                this->celestialBody = body;
+                this->totalMass = body->getMass();
+                this->centerOfMass = body->getBody_coordinates();
+                return true;
             }
-        
-        void subdivide() {
-            double newRadius = this->boundingBox.radius / 2.0;
+
+            if (this->leaf[0] == nullptr && this->celestialBody != nullptr) {
+                // Repassa a arena para fatiar o espaço
+                this->subdivide(arena);
+                
+                int oldOctant = this->getOctant(this->celestialBody->getBody_coordinates());
+                // Repassa a arena para a recursão
+                this->leaf[oldOctant]->insert(this->celestialBody, arena);
+                this->celestialBody = nullptr;
+            }
+
+            double newTotalMass = this->totalMass + body->getMass();
+            double x_cm = (this->centerOfMass.X * this->totalMass + body->getBody_coordinates().X * body->getMass()) / newTotalMass;
+            double y_cm = (this->centerOfMass.Y * this->totalMass + body->getBody_coordinates().Y * body->getMass()) / newTotalMass;
+            double z_cm = (this->centerOfMass.Z * this->totalMass + body->getBody_coordinates().Z * body->getMass()) / newTotalMass;
             
+            this->centerOfMass.X = x_cm;
+            this->centerOfMass.Y = y_cm;
+            this->centerOfMass.Z = z_cm;
+            this->totalMass = newTotalMass;
+
+            int newOctant = this->getOctant(body->getBody_coordinates());
+            // Repassa a arena para a recursão final
+            return this->leaf[newOctant]->insert(body, arena);
+        }
+        
+        void subdivide(NodeArena& arena) {
+            double newRadius = this->boundingBox.radius / 2.0;
             double cx = this->boundingBox.center.X;
             double cy = this->boundingBox.center.Y;
             double cz = this->boundingBox.center.Z;
 
-            // O laço vai de 0 a 7 (nossos 8 octantes)
             for (int i = 0; i < 8; i++) {
                 XyzCoord newCenter;
-                
-                // Usamos os bits de 'i' para decidir se somamos ou subtraímos o raio.
-                // (i & 1) verifica se o 1º bit é 1 (Direita/Esquerda)
-                // (i & 2) verifica se o 2º bit é 1 (Cima/Baixo)
-                // (i & 4) verifica se o 3º bit é 1 (Frente/Trás)
-                
                 newCenter.X = cx + ((i & 1) ? newRadius : -newRadius);
                 newCenter.Y = cy + ((i & 2) ? newRadius : -newRadius);
                 newCenter.Z = cz + ((i & 4) ? newRadius : -newRadius);
                 
-                this->leaf[i] = new OctreeNode(newRadius, newCenter);
+                // ADEUS NEW! Agora pedimos para a arena
+                this->leaf[i] = arena.allocate(newRadius, newCenter);
             }
         }
 
@@ -175,3 +173,14 @@ class OctreeNode {
                 }
             }
 };
+
+
+inline OctreeNode* NodeArena::allocate(double radius, XyzCoord center) {
+    if (count >= pool.size()) {
+        pool.resize(pool.size() * 2);
+    }
+    
+    OctreeNode* node = &pool[count++];
+    node->init(radius, center);
+    return node;
+}
