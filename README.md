@@ -2,45 +2,31 @@
 
 ## 👨‍💻 Criador
 
-**Kaiky França dos Reis Silva**  
-*Desenvolvedor de Software | Estudante na PUC Minas*
-- 💼 **LinkedIn:** [https://www.linkedin.com/in/glkaiky](https://www.linkedin.com/in/glkaiky)
-- 🌐 **Site/Portfólio:** [https://kaikyfrs.com.br](https://kaikyfrs.com.br)
-- 🐙 **GitHub:** [https://github.com/GLKaiky](https://github.com/GLKaiky)
+**Kaiky França dos Reis Silva**
 
----
+*Desenvolvedor de Software | Estudante na PUC Minas*
+
+* 💼 **LinkedIn:** [linkedin.com/in/glkaiky](https://www.linkedin.com/in/glkaiky)
+* 🌐 **Site/Portfólio:** [kaikyfrs.com.br](https://kaikyfrs.com.br)
+* 🐙 **GitHub:** [github.com/GLKaiky](https://github.com/GLKaiky)
 
 ---
 
 ## 🙏 Agradecimentos
 
 ### Em memória
-De **José Soares dos Reis** meu avô que se foi em setembro de 2026, por todo apoio e motivação que ele pode me dar nos últimos anos, que sua lembrança fique eternizada aqui
 
-### Também lembrados
-[https://github.com/Giusfds](https://github.com/Giusfds) Pela indicação na EloGroup
+> De **José Soares dos Reis** meu avô que se foi em setembro de 2026, por todo apoio e motivação que ele pode me dar nos últimos anos, que sua lembrança fique eternizada aqui.
 
-**Isaac Newton** pela equação da gravidade, e pelos livros que eu usei nesse projeto
+### 🌟 Também lembrados
 
-**Romário Faria** pela copa de 94
-
-**Gemini** pela RayLib porque eu não tenho saco de mexer com biblioteca gráfica (créditos a ele por essa parte)
-
-**Jesus Cristo** à ele toda honra e glória por todos os séculos, dos séculos.
+* **[Giusfds](https://github.com/Giusfds):** Pela indicação na EloGroup.
+* **Isaac Newton:** Pela equação da gravidade, e pelos livros que eu usei nesse projeto.
+* **Romário Faria:** Pela copa de 94.
+* **Gemini:** Pela RayLib, porque eu não tenho saco de mexer com biblioteca gráfica (créditos a ele por essa parte).
+* **Jesus Cristo:** À ele toda honra e glória por todos os séculos, dos séculos.
 
 ---
-
-
-## 🤝 CoCriadores (Contribuidores)
-
-Este projeto tem foco acadêmico e é feito para evoluir! Quer me ajudar a escrever o algoritmo em Compute Shaders na GPU? Achou um gargalo na Octree? Quer adicionar simulação térmica ou colisões reais de matéria? 
-
-Faça um *fork*, abra um *Pull Request* e o seu nome ficará eternizado no nosso universo:
-
-*Esta seção aguarda o primeiro explorador!*
-
-- 🚀 `[Seu Nome/GitHub Aqui]` - *[Sua contribuição (ex: Portou a física para GLSL, Otimizou a Arena)]*
-- 🌌 `[Seu Nome/GitHub Aqui]` - *[Sua contribuição]*
 
 
 ```markdown
@@ -60,6 +46,7 @@ Um simulador astrofísico de N-corpos de alta performance escrito em **C++17** e
 ## 🛠️ Pré-requisitos
 
 Para compilar o projeto nativamente no Linux, você precisará do compilador GCC (com suporte a C++17 e OpenMP).
+
 ```bash
 # Atualize os pacotes
 sudo apt update
@@ -77,26 +64,27 @@ sudo apt install build-essential g++ make
 
 O projeto utiliza um `Makefile` configurado com as flags de otimização extremas (`-O3`, `-ffast-math`, `-flto`) cruciais para a performance do simulador de N-corpos.
 
-Para compilar a versão de lançamento (Release) otimizada:
-
+* Para compilar a versão de lançamento (Release) otimizada:
 ```bash
 make
 
 ```
 
-Para compilar e executar o simulador automaticamente:
 
+* Para compilar e executar o simulador automaticamente:
 ```bash
 make run
 
 ```
 
-Para limpar os arquivos de build gerados:
 
+* Para limpar os arquivos de build gerados:
 ```bash
 make clean
 
 ```
+
+
 
 ---
 
@@ -136,14 +124,22 @@ Aqui estão os principais parâmetros que você pode modificar:
 * `bulgeFraction` (Padrão: `0.25`): A porcentagem das estrelas que nascem concentradas no núcleo incandescente da galáxia.
 * `innerRadius`: A distância onde o buraco negro termina e o disco começa de fato.
 
+## 🤝 CoCriadores (Contribuidores)
+
+Este projeto tem foco acadêmico e é feito para evoluir! Quer me ajudar a escrever o algoritmo em Compute Shaders na GPU? Achou um gargalo na Octree? Quer adicionar simulação térmica ou colisões reais de matéria?
+
+Faça um *fork*, abra um *Pull Request* e o seu nome ficará eternizado no nosso universo:
+
+*Esta seção aguarda o primeiro explorador!*
+
+* 🚀 `[Seu Nome/GitHub Aqui]` - *[Sua contribuição (ex: Portou a física para GLSL, Otimizou a Arena)]*
+* 🌌 `[Seu Nome/GitHub Aqui]` - *[Sua contribuição]*
+
 ---
 
 *Desenvolvido como um estudo intensivo de arquitetura C++, Otimização de Memória e Astrofísica Computacional.*
 
-```
-
-```
-
+```text
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⡀⠒⠒⠦⣄⡀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⢀⣤⣶⡾⠿⠿⠿⠿⣿⣿⣶⣦⣄⠙⠷⣤⡀⠀⠀⠀⠀
 ⠀⠀⠀⣠⡾⠛⠉⠀⠀⠀⠀⠀⠀⠀⠈⠙⠻⣿⣷⣄⠘⢿⡄⠀⠀⠀
@@ -179,3 +175,9 @@ Aqui estão os principais parâmetros que você pode modificar:
 ⢀⣠⠁⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⠖⠒⢒⡶⠂⣠⣖⣲⠄⣠⠤⡧⣷⡇⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⠶⠯⠓⠒⠂⠳⠤⠖⠘⠓⠒⠛⠞⠃
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠰⡒⡄⡲⡂⢷⠲⢸⡲⢒⣘⡒⡀⠀
+
+```
+
+```
+
+```
